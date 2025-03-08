@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 import requests
 from datetime import datetime, timedelta
 import json
@@ -175,9 +175,8 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("unban", unban_user))
     dispatcher.add_handler(CommandHandler("gift", gift_credits))
     dispatcher.add_handler(CommandHandler("buy", buy_credits))
-    dispatcher.add_handler(MessageHandler(Filters.successful_payment, handle_star_payment))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
-
+    dispatcher.add_handler(MessageHandler(Filters.successful_payment, handle_star_payment))
     updater.start_polling()
     updater.idle()
 
