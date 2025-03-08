@@ -3,6 +3,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 import requests
 from datetime import datetime, timedelta
 import json
+import os
 
 # Replace with your Telegram bot token
 TELEGRAM_BOT_TOKEN = '7946006638:AAEL5aQ_lz7oBjq2ER2LPHnKMD_AnQc0FRM'
@@ -166,6 +167,10 @@ async def handle_star_payment(update: Update, context: ContextTypes.DEFAULT_TYPE
     add_credits(user_id, stars_received)
     await update.message.reply_text(f'Thank you! {stars_received} credits have been added to your account.')
 
+# Error handler
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    print(f"Error: {context.error}")
+
 def main() -> None:
     # Create the Application
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
@@ -177,6 +182,9 @@ def main() -> None:
     application.add_handler(CommandHandler("gift", gift_credits))
     application.add_handler(CommandHandler("buy", buy_credits))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+    # Add error handler
+    application.add_error_handler(error_handler)
 
     # Start the bot
     application.run_polling()
