@@ -1,0 +1,30 @@
+name: Deploy to Fly.io
+
+     on:
+       push:
+         branches:
+           - main  # Trigger on push to main branch
+
+     jobs:
+       deploy:
+         runs-on: ubuntu-latest
+
+         steps:
+           - name: Checkout code
+             uses: actions/checkout@v3
+
+           - name: Set up Python
+             uses: actions/setup-python@v4
+             with:
+               python-version: '3.9'
+
+           - name: Install dependencies
+             run: |
+               python -m pip install --upgrade pip
+               pip install -r requirements.txt
+
+           - name: Deploy to Fly.io
+             uses: superfly/flyctl-actions@v1
+             with:
+               fly_api_token: ${{ secrets.FLY_API_TOKEN }}
+               app_name: your-fly-app-name
